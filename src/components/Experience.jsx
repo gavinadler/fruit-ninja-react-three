@@ -6,19 +6,16 @@ import {
     Preload,
 } from "@react-three/drei";
 import { CuboidCollider, Physics } from "@react-three/rapier";
-import { useThree } from "@react-three/fiber";
 import { Perf } from "r3f-perf";
 import { v4 as uuidv4 } from "uuid";
 
-import { GAME_STATE_GLOBAL, GLOBAL_THREE_OBJECTS } from "../utils/constants";
+import { GAME_STATE_GLOBAL } from "../utils/constants";
 import { useStore } from "../utils/store";
 
 import Orange from "./Fruits/Orange";
+import Overlay3D from "./HUD/Overlay3D";
 
 const Experience = () => {
-    const scene = useThree((state) => state.scene);
-    const gl = useThree((state) => state.gl);
-
     const [fruits, setFruits] = useState([]);
     const [removeFruit, setRemoveFruit] = useState(false);
 
@@ -33,8 +30,8 @@ const Experience = () => {
 
     const spawnFruitInterval = (interval = 1.5) => {
         const intervalTimer = setInterval(() => {
-            // get random x position in -6 to 6 range
-            const randomX = Math.floor(Math.random() * 12) - 6;
+            // get random x position in -5.5 to 5.5 range
+            const randomX = Math.floor(Math.random() * 11) - 5.5;
 
             // get random z position in -1 to 2 range
             const randomZ = Math.floor(Math.random() * 4) - 2;
@@ -74,7 +71,7 @@ const Experience = () => {
 
     useEffect(() => {
         if (gameState === 1) {
-            const spawnInterval = spawnFruitInterval(1);
+            const spawnInterval = spawnFruitInterval(0.5);
             return () => {
                 clearInterval(spawnInterval);
             };
@@ -89,17 +86,18 @@ const Experience = () => {
     }, [removeFruit]);
 
     useEffect(() => {
-        GLOBAL_THREE_OBJECTS.scene = scene;
-        GLOBAL_THREE_OBJECTS.renderer = gl;
-
-        window.addEventListener("mousedown", handlePointerDown);
-        window.addEventListener("mouseup", handlePointerUp);
-        window.addEventListener("touchstart", handlePointerDown);
+        document.addEventListener("mousedown", handlePointerDown);
+        document.addEventListener("mouseup", handlePointerUp);
+        document.addEventListener("mouseleave", handlePointerUp);
+        document.addEventListener("touchstart", handlePointerDown);
+        document.addEventListener("touchend", handlePointerUp);
 
         return () => {
-            window.removeEventListener("mousedown", handlePointerDown);
-            window.removeEventListener("mouseup", handlePointerUp);
-            window.removeEventListener("touchstart", handlePointerDown);
+            document.removeEventListener("mousedown", handlePointerDown);
+            document.removeEventListener("mouseup", handlePointerUp);
+            document.removeEventListener("mouseleave", handlePointerUp);
+            document.removeEventListener("touchstart", handlePointerDown);
+            document.removeEventListener("touchend", handlePointerUp);
         };
     }, []);
 
@@ -118,8 +116,10 @@ const Experience = () => {
             <directionalLight position={[1, 2, 3]} intensity={1.5} />
             <ambientLight intensity={0.5} />
 
+            <Overlay3D />
+
             <Suspense>
-                <Physics debug gravity={[0, -15, 0]} colliders={false}>
+                <Physics gravity={[0, -15, 0]} colliders={false}>
                     {fruits}
                     <CuboidCollider
                         type="fixed"
@@ -128,6 +128,7 @@ const Experience = () => {
                     />
                 </Physics>
             </Suspense>
+
             <Preload all />
             <AdaptiveDpr pixelated />
         </Suspense>

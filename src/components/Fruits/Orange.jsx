@@ -32,7 +32,7 @@ const Orange = ({
         const torqeImpulse = getRandomIntInclusive(1, 3);
         const timeout = setTimeout(() => {
             rigidBody.applyImpulse(
-                { x: 0, y: getRandomIntInclusive(55, 75), z: 0 },
+                { x: 0, y: getRandomIntInclusive(45, 65), z: 0 },
                 true
             );
             rigidBody.applyTorqueImpulse(

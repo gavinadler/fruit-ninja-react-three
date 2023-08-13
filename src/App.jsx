@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 
-import Experience from "./components/Experience.jsx";
 import Overlay from "./components/HUD/Overlay.jsx";
+import Experience from "./components/Experience.jsx";
 
 const App = () => {
   return (

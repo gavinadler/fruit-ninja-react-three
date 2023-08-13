@@ -3,6 +3,7 @@ import styled, { keyframes } from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 
 import { useStore } from "../../utils/store";
+import { MAX_TRAIL_DOTS } from "../../utils/constants";
 
 const Trail = styled.div`
   position: absolute;
@@ -41,8 +42,6 @@ const TrailDot = styled.div`
   opacity: 0.5;
   animation: ${moveTrail} 0.5s ease-in-out forwards;
 `;
-
-const MAX_TRAIL_DOTS = 50; // Limit the number of trail dots
 
 const PointerTrail = () => {
   const [trails, setTrails] = useState([]);
