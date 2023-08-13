@@ -52,14 +52,18 @@ const Experience = () => {
         return intervalTimer;
     };
 
+    const handleTouchDown = (e) => {
+        setIsSlicing(true);
+    };
+
     const handlePointerDown = (e) => {
         if (e.button !== 0) return;
+
+        setIsSlicing(true);
         switch (GAME_STATE_GLOBAL.state) {
             case 0:
                 start();
                 break;
-            case 1:
-                setIsSlicing(true);
             default:
                 break;
         }
@@ -89,14 +93,14 @@ const Experience = () => {
         document.addEventListener("mousedown", handlePointerDown);
         document.addEventListener("mouseup", handlePointerUp);
         document.addEventListener("mouseleave", handlePointerUp);
-        document.addEventListener("touchstart", handlePointerDown);
+        document.addEventListener("touchstart", handleTouchDown);
         document.addEventListener("touchend", handlePointerUp);
 
         return () => {
             document.removeEventListener("mousedown", handlePointerDown);
             document.removeEventListener("mouseup", handlePointerUp);
             document.removeEventListener("mouseleave", handlePointerUp);
-            document.removeEventListener("touchstart", handlePointerDown);
+            document.removeEventListener("touchstart", handleTouchDown);
             document.removeEventListener("touchend", handlePointerUp);
         };
     }, []);
